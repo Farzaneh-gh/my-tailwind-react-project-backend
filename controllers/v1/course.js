@@ -138,8 +138,8 @@ exports.getAll = async (req, res, next) => {
   try {
     const courses = await courseModel
       .find()
-    
       .populate("categoryID")
+      .populate("creator", "name username")
       .lean()
       .sort({ _id: -1 });
 
@@ -168,7 +168,8 @@ exports.getAll = async (req, res, next) => {
       allCourses.push({
         ...course,
         categoryID: course.categoryID,
-        creator: "قدیر یلمه",
+        creator:
+          course.creator?.name || course.creator?.username || "Unknown Creator",
         registers: courseRegisters.length,
         courseAverageScore: Math.floor(
           courseTotalScore / (courseScores.length + 1)

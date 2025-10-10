@@ -3,59 +3,60 @@ const yup = require("yup");
 const removeUserValidator = yup.object().shape({
   id: yup
     .string()
-    .required("شناسه کاربر الزامی است")
-    .matches(/^[0-9a-fA-F]{24}$/, "شناسه کاربر معتبر نیست"),
+    .required("User ID is required")
+    .matches(/^[0-9a-fA-F]{24}$/, "Invalid user ID"),
 });
 
 const banUserValidator = yup.object().shape({
   id: yup
     .string()
-    .required("شناسه کاربر الزامی است")
-    .matches(/^[0-9a-fA-F]{24}$/, "شناسه کاربر معتبر نیست"),
+    .required("User ID is required")
+    .matches(/^[0-9a-fA-F]{24}$/, "Invalid user ID"),
 });
 
 const editUserValidator = yup.object().shape({
   username: yup.string(),
-  email: yup.string().email("آدرس ایمیل نامعتبر است"),
-  password: yup.string().min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد"),
+  email: yup.string().email("Invalid email address"),
+  password: yup.string().min(8, "Password must be at least 8 characters"),
   name: yup
     .string()
-    .min(3, "نام و نام خانوادگی نباید کمتر از 3 کاراکتر باشد")
-    .max(40, "نام و نام خانوادگی نباید بیشتر از 40 کاراکتر باشد"),
-  phone: yup.string(),
+    .min(3, "Full name must be at least 3 characters")
+    .max(40, "Full name must be at most 40 characters"),
+  phone: yup
+    .string()
+    .matches(/^(\+34|0034)?[6-9][0-9]{8}$/, "Invalid Spain phone number"),
   role: yup
-  .string()
-  .oneOf(["ADMIN", "USER"], "نقش کاربر باید یکی از مقادیر ADMIN و USER باشد"),
+    .string()
+    .oneOf(["ADMIN", "USER"], "Role must be one of ADMIN or USER"),
   id: yup
     .string()
-    .required("شناسه کاربر الزامی است")
-    .matches(/^[0-9a-fA-F]{24}$/, "شناسه کاربر معتبر نیست"),
+    .required("User ID is required")
+    .matches(/^[0-9a-fA-F]{24}$/, "Invalid user ID"),
 });
 
 const updateUserValidator = yup.object().shape({
-  name: yup.string().required("نام الزامی است"),
-  username: yup.string().required("نام کاربری الزامی است"),
-  email: yup.string().email("ایمیل معتبر نیست").required("ایمیل الزامی است"),
+  name: yup.string().required("Name is required"),
+  username: yup.string().required("Username is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
   password: yup
     .string()
-    .required("رمز عبور الزامی است")
-    .min(8, "رمز عبور باید حداقل 8 کاراکتر باشد"),
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters"),
   phone: yup
     .string()
-    .required("شماره تلفن همراه الزامی است")
-    .matches(/^09[0-9]{9}$/, "شماره تلفن همراه معتبر نیست"),
+    .required("Phone number is required")
+    .matches(/^(\+34|0034)?[6-9][0-9]{8}$/, "Invalid Spain phone number"),
 });
-
 
 const changeUserRoleValidator = yup.object().shape({
   id: yup
     .string()
-    .required("شناسه کاربر الزامی است")
-    .matches(/^[0-9a-fA-F]{24}$/, "شناسه کاربر معتبر نیست"),
+    .required("User ID is required")
+    .matches(/^[0-9a-fA-F]{24}$/, "Invalid user ID"),
   role: yup
     .string()
-    .oneOf(["ADMIN", "USER"], "نقش کاربر باید یکی از مقادیر ADMIN و USER باشد")
-    .required("نقش کاربر الزامی است"),
+    .oneOf(["ADMIN", "USER"], "Role must be one of ADMIN or USER")
+    .required("Role is required"),
 });
 
 module.exports = {
