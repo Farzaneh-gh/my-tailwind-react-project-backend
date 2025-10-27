@@ -190,16 +190,27 @@ exports.getOne = async (req, res, next) => {
       throw err;
     });
 
+    // populate virtual `sessions` so sessions are included with the course
     const course = await courseModel
       .findOne({ shortName: req.params.shortName })
       .populate("categoryID", "-password")
       .populate("creator", "-password")
+      .populate({ path: "sessions" })
       .lean();
     if (!course) {
       return res.status(404).json({ message: "Course Not Found!" });
     }
 
-    const sessions = await sessionModel.find({ course: course._id }).lean();
+    // If virtual populate didn't include sessions (older records),
+    // fall back to querying sessions by course id or its string form.
+    let sessions = course.sessions || [];
+    if (!sessions.length) {
+      sessions = await sessionModel
+        .find({
+          $or: [{ course: course._id }, { course: course._id.toString() }],
+        })
+        .lean();
+    }
     const comments = await commentModel
       .find({ course: course._id, answer: 1 })
       .populate("creator", "-password")
